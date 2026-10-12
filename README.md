@@ -2,6 +2,8 @@
 
 一个基于 Cloudflare Worker 的站点元数据提取服务。通过传入目标 URL，自动抓取页面 HTML 并解析出标题、描述和站点图标，以 JSON 格式返回。
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/jhlzlove/site-info-worker)
+
 ## 功能特性
 
 - 解析网页 `<title>`、`og:description`、`description` 元数据
@@ -15,16 +17,52 @@
 
 ## 部署
 
-### 1. 配置环境变量
+### 方式 A：一键部署（推荐，无需 Fork）
 
-在 `wrangler.jsonc` 中修改以下变量：
+点击上面的 `Deploy to Cloudflare` 按钮，或访问：
+
+```
+https://deploy.workers.cloudflare.com/?url=https://github.com/jhlzlove/site-info-worker
+```
+
+Cloudflare 会自动 Clone 本仓库到你的 GitHub/GitLab 账号、创建 Worker 并完成首次部署。
+
+> 注意：Deploy 确认页只能修改仓库名、Worker 名等基础信息，**不能直接填写 `HOSTS` 等业务变量**，
+> 首次部署完成后，按下面的「配置变量（覆盖默认值）」步骤在 Dashboard 中补填即可。
+
+### 方式 B：Fork 仓库后连接 Git 部署（推荐，可持续同步上游）
+
+1. 点击本仓库右上角 `Fork`，将仓库 Fork 到你自己的 GitHub 账号。
+2. 打开 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 `Workers & Pages` > `Create` > `Connect Git`。
+3. 选择你刚 Fork 的仓库（如 `your-name/site-info-worker`），分支选 `main`。
+4. 构建配置保持默认即可（构建命令为空，部署命令为 `npx wrangler deploy`），点击 `Save and deploy` 完成首次部署。
+5. 之后你每次 `git push` 到 `main` 分支，Cloudflare Workers Builds 都会自动重新部署；
+   直接在 GitHub 网页上改文件并 Commit 也会触发部署，无需本地环境。
+
+### 配置变量（覆盖默认值，A / B 通用）
+
+本项目已在 `wrangler.jsonc` 中开启 `keep_vars: true`，
+你在 Dashboard 填写的变量**不会**被下次 Git 推送部署覆盖，可以放心在页面上修改：
+
+1. 在 Dashboard 进入 `Workers & Pages`，点击你的 Worker（如 `site-info-worker`）。
+2. 进入 `Settings` > `Variables and Secrets`，点击 `Add`（或 `Edit variables`）。
+3. 添加以下两个纯文本（Plaintext）变量：
 
 | 变量 | 说明 | 示例 |
 |------|------|------|
-| `HOSTS` | 允许调用本服务的 Referer 域名列表（逗号分隔） | `"example.com,blog.example.com"` |
-| `ALLOW_EMPTY_REFERER` | 是否允许无 Referer 的请求 | `"false"` |
+| `HOSTS` | 允许调用本服务的 Referer 域名列表（逗号分隔） | `example.com,blog.example.com` |
+| `ALLOW_EMPTY_REFERER` | 是否允许无 Referer 的请求 | `false` |
 
-### 2. 部署到 Cloudflare
+4. 点击 `Deploy`（或 `Save and deploy`）使变量生效。
+5. 后续如需修改，重复上述步骤即可，无需改代码、无需重新连接仓库。
+
+> 也可直接改 Fork 仓库中的 `wrangler.jsonc` 的 `vars` 字段后 `git push`，
+> 但更推荐用 Dashboard 变量覆盖，避免把自己的域名提交进 Git 历史。
+
+### 方式 C：本地 Wrangler 命令行部署
+
+1. 修改 `wrangler.jsonc` 中的 `vars`（`HOSTS` / `ALLOW_EMPTY_REFERER`），或部署后在 Dashboard 按上面的「配置变量」步骤覆盖。
+2. 执行部署：
 
 ```bash
 npx wrangler deploy

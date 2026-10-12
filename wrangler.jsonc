@@ -3,6 +3,10 @@
   "name": "site-info-worker",
   "main": "src/index.js",
   "compatibility_date": "2026-10-12",
+  // 开启后，通过 Cloudflare Dashboard 设置的变量不会被下次 Git 推送部署覆盖。
+  // 这样 Fork 部署的用户可以直接在 Dashboard 填写 HOSTS / ALLOW_EMPTY_REFERER 完成覆盖。
+  "keep_vars": true,
+  // 默认变量（仅为示例/兜底，Dashboard 中的同名变量会优先生效并被保留）。
   "vars": {
     "HOSTS": "example.com,blog.example.com",
     "ALLOW_EMPTY_REFERER": "false"
