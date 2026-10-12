@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "site-info-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-12",
+  "vars": {
+    "HOSTS": "blog.elysiamoon.com,jhlzlove.github.io",
+    "ALLOW_EMPTY_REFERER": "false"
+  }
+}
