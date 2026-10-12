@@ -15,13 +15,7 @@
 
 ## 部署
 
-### 1. 安装依赖
-
-```bash
-npm install
-```
-
-### 2. 配置环境变量
+### 1. 配置环境变量
 
 在 `wrangler.jsonc` 中修改以下变量：
 
@@ -30,7 +24,7 @@ npm install
 | `HOSTS` | 允许调用本服务的 Referer 域名列表（逗号分隔） | `"example.com,blog.example.com"` |
 | `ALLOW_EMPTY_REFERER` | 是否允许无 Referer 的请求 | `"false"` |
 
-### 3. 部署到 Cloudflare
+### 2. 部署到 Cloudflare
 
 ```bash
 npx wrangler deploy
